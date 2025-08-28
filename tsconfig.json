@@ -1,0 +1,37 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",                    // Phiên bản JavaScript đích
+    "useDefineForClassFields": true,       // Sử dụng cú pháp class fields mới
+    "lib": ["ES2020", "DOM", "DOM.Iterable"], // Thư viện được sử dụng
+    "module": "ESNext",                    // Hệ thống module
+    "skipLibCheck": true,                  // Bỏ qua kiểm tra type trong node_modules
+    "moduleResolution": "bundler",         // Cách resolve module
+    "allowImportingTsExtensions": true,    // Cho phép import file .ts
+    "resolveJsonModule": true,             // Cho phép import file JSON
+    "isolatedModules": true,               // Mỗi file là module độc lập
+    "noEmit": true,                        // Không tạo file JS output
+    "jsx": "preserve",                     // Giữ nguyên JSX syntax
+    "strict": true,                        // Bật chế độ strict (nghiêm ngặt)
+    "noUnusedLocals": true,                // Báo lỗi khi có biến không sử dụng
+    "noUnusedParameters": true,            // Báo lỗi khi có tham số không sử dụng
+    "noFallthroughCasesInSwitch": true,    // Báo lỗi khi thiếu break trong switch
+    "baseUrl": ".",                        // Thư mục gốc
+    "paths": {                             // Alias đường dẫn (shortcut import)
+      "@/*": ["src/*"],                    // @ = src/
+      "@/components/*": ["src/components/*"],
+      "@/composables/*": ["src/composables/*"],
+      "@/services/*": ["src/services/*"],
+      "@/types/*": ["src/types/*"],
+      "@/utils/*": ["src/utils/*"]
+    }
+  },
+  "references": [
+    {
+      "path": "./tsconfig.node.json"
+    },
+    {
+      "path": "./tsconfig.app.json"
+    }
+  ],
+  "files": []
+}
