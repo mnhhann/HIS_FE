@@ -1,30 +1,33 @@
+# Build outputs
+dist/
+build/
+.nuxt/
+.output/
+.vite/
+
+# Dependencies
+node_modules/
+
 # Logs
-logs
 *.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
 
-node_modules
+# Environment files
+.env*
+
+# Cache
+.cache/
+.temp/
+.tmp/
+
+# Editor files
+.vscode/
+.idea/
+
+# OS files
 .DS_Store
-dist
-dist-ssr
-coverage
-*.local
+Thumbs.db
 
-/cypress/videos/
-/cypress/screenshots/
-
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
-
-*.tsbuildinfo
+# Specific files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
