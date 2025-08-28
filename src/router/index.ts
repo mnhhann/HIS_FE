@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import AbbreviationsListPage from '@/views/abbreviations/pages/AbbreviationsListPage.vue'
+import Home from '@/views/home/index.vue'
+import { AbbreviationRouters } from './routes/abbreviation'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -7,13 +8,9 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: AbbreviationsListPage,
+      component: Home,
     },
-    {
-      path: '/abbreviations-list-page',
-      name: 'abbreviations-list-page',
-      component: AbbreviationsListPage,
-    },
+    ...AbbreviationRouters,
   ],
 })
 

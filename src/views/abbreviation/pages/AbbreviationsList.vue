@@ -1,17 +1,62 @@
+
+<script setup lang="ts">
+  import { useAbbreviations } from '@/composables/useAbbreviations'
+  import { useAbbreviationStore } from '@/store/modules/abbreviation'
+  import type { Abbreviation } from '@/types/abbreviation.types'
+  import { formatDate } from '@/utils/formatters'
+  import { truncate } from '@/utils/helpers'
+  import { computed, onMounted, ref, watchEffect } from 'vue'
+  import { useRouter } from 'vue-router'
+
+  // Router để điều hướng
+  const router = useRouter()
+  const store = useAbbreviationStore()
+  onMounted(() => {
+    store.fetchAbbreviations()
+  })
+  // Composable để quản lý abbreviations
+  const abbreviations = ref<Abbreviation[]>([])
+  watchEffect(() => {
+    abbreviations.value = store.abbreviations
+  })
+
+  // Local state
+  const searchInput = ref('')
+
+  // Computed
+  const hasAbbreviations = computed(() => {
+    return abbreviations.value.length > 0
+  })
+
+  // Methods
+  const handleSearchInput = (event: Event) => {
+    const target = event.target as HTMLInputElement
+    searchInput.value = target.value
+  }
+
+  const truncateText = (text: string, length: number) => {
+    return truncate(text, length)
+  }
+
+  const handleCreateNew = () => {
+    router.push('/abbreviations/create')
+  }
+
+  const handleViewDetail = (item: Abbreviation) => {
+    router.push(`/abbreviations/${item.id}`)
+  }
+
+  const handleEdit = (item: Abbreviation) => {
+    router.push(`/abbreviations/${item.id}/edit`)
+  }
+</script>
+
 <template>
   <div class="abbreviations-page">
     <!-- Header với search và actions -->
     <div class="page-header">
       <div class="header-left">
         <h1 class="page-title">Danh sách Abbreviations</h1>
-        <p class="page-subtitle">
-          Tổng cộng:
-          <strong>{{ abbreviations.length }}</strong>
-          items
-          <span v-if="hasSelectedItems" class="selected-count">
-            ({{ selectedCount }} đã chọn)
-          </span>
-        </p>
       </div>
 
       <div class="header-actions">
@@ -24,21 +69,9 @@
             class="search-input"
             @input="handleSearchInput"
           />
-          <button
-            v-if="searchKeyword"
-            @click="clearSearch"
-            class="clear-search-btn"
-          >
-            ✕
-          </button>
         </div>
 
         <!-- Action buttons -->
-        <button :disabled="isLoading" class="btn btn-secondary">
-          <span v-if="isLoading">🔄</span>
-          <span v-else>↻</span>
-          Tải lại
-        </button>
 
         <button @click="handleCreateNew" class="btn btn-primary">
           ➕ Tạo mới
@@ -47,13 +80,13 @@
     </div>
 
     <!-- Loading state -->
-    <div v-if="isLoading && abbreviations.length === 0" class="loading-state">
+    <!-- <div v-if="isLoading" class="loading-state">
       <div class="loading-spinner"></div>
       <p>Đang tải dữ liệu...</p>
-    </div>
+    </div> -->
 
     <!-- Empty state -->
-    <div v-else-if="!hasAbbreviations && !isLoading" class="empty-state">
+    <div v-if="!hasAbbreviations" class="empty-state">
       <div class="empty-icon">📝</div>
       <h3>Chưa có abbreviations nào</h3>
       <p>Hãy tạo abbreviation đầu tiên của bạn</p>
@@ -64,28 +97,11 @@
 
     <!-- Data table -->
     <div v-else class="data-table-container">
-      <!-- Bulk actions -->
-      <div v-if="hasSelectedItems" class="bulk-actions">
-        <span>{{ selectedCount }} items đã chọn</span>
-        <button @click="handleBulkDelete" class="btn btn-danger">
-          🗑️ Xóa đã chọn
-        </button>
-      </div>
-
       <!-- Table -->
       <div class="table-wrapper">
         <table class="data-table">
           <thead>
             <tr>
-              <th class="checkbox-column">
-                <input
-                  type="checkbox"
-                  :checked="
-                    selectedIds.length === filteredAbbreviations.length &&
-                    filteredAbbreviations.length > 0
-                  "
-                />
-              </th>
               <th>Abbreviation</th>
               <th>Tên</th>
               <th>Mô tả ngắn</th>
@@ -96,17 +112,10 @@
           </thead>
           <tbody>
             <tr
-              v-for="item in filteredAbbreviations"
+              v-for="item in abbreviations"
               :key="item.id"
               class="table-row"
-              :class="{ selected: selectedIds.includes(item.id) }"
             >
-              <td class="checkbox-cell">
-                <input
-                  type="checkbox"
-                  :checked="selectedIds.includes(item.id)"
-                />
-              </td>
               <td class="abbr-cell">
                 <code class="abbr-code">{{ item.abbr }}</code>
               </td>
@@ -151,7 +160,6 @@
                     ✏️
                   </button>
                   <button
-                    @click="handleDeleteClick(item.id)"
                     class="btn-icon btn-delete"
                     title="Xóa"
                   >
@@ -166,7 +174,7 @@
     </div>
 
     <!-- Delete confirmation modal -->
-    <div v-if="showDeleteModal" class="modal-overlay" @click="cancelDelete">
+    <!-- <div v-if="showDeleteModal" class="modal-overlay" @click="cancelDelete">
       <div class="modal" @click.stop>
         <div class="modal-header">
           <h3>Xác nhận xóa</h3>
@@ -180,75 +188,10 @@
           <button @click="confirmDelete" class="btn btn-danger">Xóa</button>
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
-<script setup lang="ts">
-  import { ref, computed } from 'vue'
-  import { useRouter } from 'vue-router'
-  import { useAbbreviations } from '@/composables/useAbbreviations'
-  import { formatDate } from '@/utils/formatters'
-  import { truncate } from '@/utils/helpers'
-  import type { Abbreviation } from '@/types/abbreviation.types'
-
-  // Router để điều hướng
-  const router = useRouter()
-  console.log('Router instance:', router)
-  // Composable để quản lý abbreviations
-  const {
-    abbreviations,
-    filteredAbbreviations,
-    isLoading,
-    searchKeyword,
-    selectedIds,
-    showDeleteModal,
-    hasSelectedItems,
-    selectedCount,
-    handleSelectItem,
-    handleSelectAll,
-    handleDeleteClick,
-    confirmDelete,
-    cancelDelete,
-    refreshData,
-    searchAbbreviations,
-    clearSearch,
-  } = useAbbreviations()
-
-  // Local state
-  const searchInput = ref('')
-
-  // Computed
-  const hasAbbreviations = computed(() => abbreviations.length > 0)
-
-  // Methods
-  const handleSearchInput = (event: Event) => {
-    const target = event.target as HTMLInputElement
-    searchInput.value = target.value
-    searchAbbreviations(target.value)
-  }
-
-  const truncateText = (text: string, length: number) => {
-    return truncate(text, length)
-  }
-
-  const handleCreateNew = () => {
-    router.push('/abbreviations/create')
-  }
-
-  const handleViewDetail = (item: Abbreviation) => {
-    router.push(`/abbreviations/${item.id}`)
-  }
-
-  const handleEdit = (item: Abbreviation) => {
-    router.push(`/abbreviations/${item.id}/edit`)
-  }
-
-  const handleBulkDelete = () => {
-    // Implement bulk delete logic
-    console.log('Bulk delete:', selectedIds.value)
-  }
-</script>
 
 <style scoped>
   /* CSS Styles cho component */
