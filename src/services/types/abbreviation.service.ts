@@ -1,10 +1,9 @@
 // Abbreviation service - Service xử lý API abbreviation
-import { apiService } from '../api'
 import type {
   Abbreviation,
-  AbbreviationApiResponse,
-  AbbreviationParams,
+  AbbreviationParams
 } from '@/types/abbreviation.types'
+import { apiService } from '../api'
 
 export class AbbreviationService {
   private readonly baseUrl = '/abbreviation'
