@@ -1,6 +1,5 @@
 <script setup>
-import AbbreviationsList from './pages/AbbreviationsList.vue';
-
+  import AbbreviationsList from './pages/AbbreviationsList.vue'
 </script>
 
 <template>
