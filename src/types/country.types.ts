@@ -1,3 +1,5 @@
+import type { ApiResponse } from "./global"
+
 export interface Country{
     id: number,
     code: string,
@@ -8,15 +10,9 @@ export interface Country{
 }
 
 export interface CountryParams {
-  search?: string // Tìm kiếm theo tên hoặc abbr
-  page?: number // Phân trang
-  limit?: number // Số lượng per page
+  search?: string 
+  page?: number 
+  limit?: number
 }
 
-export interface CountryApiResponse {
-  status: number
-  data: Country[]
-  success: boolean
-  errors: any | null
-  timestamp: number
-}
+export type CountryApiResponse = ApiResponse<Country[]>
