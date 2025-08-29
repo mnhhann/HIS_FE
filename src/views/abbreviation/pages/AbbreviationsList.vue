@@ -1,4 +1,8 @@
 <script setup lang="ts">
+  import CellActions from '@/components/base/DataTableColumns/CellActions.vue'
+  import CellCode from '@/components/base/DataTableColumns/CellCode.vue'
+  import CellDateTime from '@/components/base/DataTableColumns/CellDateTime.vue'
+  import CellText from '@/components/base/DataTableColumns/CellText.vue'
   import { useAbbreviationStore } from '@/store/modules/abbreviation'
   import type { Abbreviation } from '@/types/abbreviation.types'
   import { formatDate } from '@/utils/formatters'
@@ -11,7 +15,6 @@
     NEmpty,
     NIcon,
     NInput,
-    NPopconfirm,
     NSpace,
     NTag,
     type DataTableColumns,
@@ -34,8 +37,6 @@
   // Local state
   const searchInput = ref('')
   const loading = ref(false)
-  const showDeleteModal = ref(false)
-  const selectedItem = ref<Abbreviation | null>(null)
 
   // Computed
   const hasAbbreviations = computed(() => {
@@ -53,90 +54,38 @@
     )
   })
 
-  // Table columns configuration
-  const columns: DataTableColumns<Abbreviation> = [
+  const columns = computed<DataTableColumns<Abbreviation>>(() => [
     {
-      title: 'Abbreviation',
+      title: 'abbr',
       key: 'abbr',
-      render: row =>
-        h(
-          'code',
-          {
-            style:
-              'background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-family: monospace;',
-          },
-          row.abbr
-        ),
+      render: row => h(CellCode, { value: row.abbr }),
     },
     {
       title: 'Tên',
       key: 'name',
-      render: row =>
-        h('div', [
-          h(
-            'div',
-            { style: 'font-weight: 600; margin-bottom: 2px;' },
-            row.name
-          ),
-          row.type
-            ? h(
-                NTag,
-                { size: 'small', type: 'info' },
-                { default: () => `Type ${row.type}` }
-              )
-            : null,
-        ]),
+      render: row => h(CellText, { value: row.name }),
     },
     {
       title: 'Mô tả ngắn',
       key: 'longTxt',
-      render: row => truncate(row.longTxt, 100),
-    },
-    {
-      title: 'Chuyên khoa',
-      key: 'specialtyCode',
-      render: row =>
-        row.specialtyCode
-          ? h(NTag, { type: 'success' }, { default: () => row.specialtyCode })
-          : h('span', { style: 'color: #9ca3af;' }, '-'),
+      render: row => h(CellText, { value: row.longTxt }),
     },
     {
       title: 'Ngày tạo',
       key: 'createdAt',
-      render: row => formatDate(row.createdAt),
+      render: row => h(CellDateTime, { value: row.createdAt }),
     },
     {
       title: 'Hành động',
       key: 'actions',
       render: row =>
-        h(
-          NSpace,
-          { size: 'small' },
-          {
-            default: () => [
-              h(
-                NButton,
-                {
-                  size: 'small',
-                  type: 'primary',
-                  ghost: true,
-                },
-                { default: () => 'Sửa' }
-              ),
-              h(
-                NButton,
-                {
-                  size: 'small',
-                  type: 'error',
-                  ghost: true,
-                },
-                { default: () => 'Xóa' }
-              ),
-            ],
-          }
-        ),
+        h(CellActions, {
+          row,
+          onEdit: () => editItem(row.id),
+          onDelete: () => deleteItem(row.id),
+        }),
     },
-  ]
+  ])
 
   // Methods
   const createNew = () => {
@@ -147,19 +96,12 @@
     router.push(`/abbreviations/${item.id}`)
   }
 
-  const editItem = (item: Abbreviation) => {
-    router.push(`/abbreviations/${item.id}/edit`)
+  const editItem = (id: number) => {
+    router.push(`/abbreviations/update/${id}`)
   }
 
-  const deleteItem = async (item: Abbreviation) => {
-    try {
-      loading.value = true
-      await store.deleteAbbreviation(item.id)
-    } catch (error) {
-      console.error('Error deleting abbreviation:', error)
-    } finally {
-      loading.value = false
-    }
+  const deleteItem = async (id: number) => {
+    router.push(`/abbreviations/delete/${id}`)
   }
 </script>
 
