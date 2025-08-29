@@ -1,9 +1,7 @@
-// src/router/index.ts
 import { createRouter, createWebHistory } from 'vue-router'
-import MainLayout from '@/layouts/MainLayout.vue'
 import Home from '@/views/home/index.vue'
-import Abbreviation from '@/views/abbreviation/index.vue'
 import { AbbreviationRouters } from './routes/abbreviation'
+import { CountryRouters } from './routes/country'
 import AdminLayout from '@/layouts/MainLayout.vue'
 import NotFound from '@/views/Error/404.vue'
 
@@ -17,7 +15,8 @@ const router = createRouter({
       children: [
         { path: '', redirect: '/home' },
         { path: 'home', name: 'home', component: Home },
-        ...AbbreviationRouters
+        ...AbbreviationRouters,
+        ...CountryRouters
       ]
     },
     { path: '/:pathMatch(.*)*', name: 'NotFound', component: NotFound } // fallback toàn cục
