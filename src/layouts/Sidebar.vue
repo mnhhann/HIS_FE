@@ -37,6 +37,7 @@
     HomeOutline,
     PeopleOutline,
     DocumentTextOutline,
+    FileTrayStackedOutline,
   } from '@vicons/ionicons5'
 
   const props = defineProps({
@@ -64,6 +65,11 @@
       label: 'Cách dùng thuốc',
       key: 'abbreviation',
       icon: renderIcon(DocumentTextOutline),
+    },
+    {
+      label: 'Khoa',
+      key: 'ward',
+      icon: renderIcon(FileTrayStackedOutline),
     },
     // {
     //   label: 'Settings',
