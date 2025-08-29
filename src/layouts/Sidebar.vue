@@ -1,16 +1,8 @@
 <template>
-  <div style="height: 100%; display: flex; flex-direction: column">
+  <div style="height: 100%; display: flex; flex-direction: column;">
     <div
       class="logo"
-      style="
-        height: 60px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: bold;
-        font-size: 18px;
-        border-bottom: 1px solid #eee;
-      "
+      style="height: 60px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 18px; border-bottom: 1px solid #eee;"
     >
       <span v-if="!collapsed">HIS</span>
       <span v-else>H</span>
@@ -24,57 +16,56 @@
       :collapsed-icon-size="22"
       :value="activeKey"
       @update:value="handleUpdateValue"
-      style="flex: 1"
+      style="flex: 1;"
     />
   </div>
 </template>
 
 <script setup>
-  import { h, ref, watchEffect } from 'vue'
-  import { useRouter, useRoute } from 'vue-router'
-  import { NIcon, NMenu } from 'naive-ui'
-  import {
-    HomeOutline,
-    PeopleOutline,
-    DocumentTextOutline,
-  } from '@vicons/ionicons5'
+import { h, ref } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+import { NIcon, NMenu } from 'naive-ui'
+import {
+  HomeOutline,
+  PeopleOutline,
+  SettingsOutline
+} from '@vicons/ionicons5'
 
-  const props = defineProps({
-    collapsed: Boolean,
-  })
+const props = defineProps({
+  collapsed: Boolean
+})
 
-  const router = useRouter()
-  const route = useRoute()
-  const activeKey = ref(route.name)
+const router = useRouter()
+const route = useRoute()
+const activeKey = ref(route.name)
 
-  const renderIcon = icon => () => h(NIcon, null, { default: () => h(icon) })
+const renderIcon = (icon) => () => h(NIcon, null, { default: () => h(icon) })
 
-  const menuOptions = [
-    {
-      label: 'Dashboard',
-      key: 'dashboard',
-      icon: renderIcon(HomeOutline),
-    },
-    {
-      label: 'Danh mục',
-      key: 'countries',
-      icon: renderIcon(PeopleOutline),
-    },
-    {
-      label: 'Cách dùng thuốc',
-      key: 'abbreviation',
-      icon: renderIcon(DocumentTextOutline),
-    },
-    // {
-    //   label: 'Settings',
-    //   key: 'settings',
-    //   icon: renderIcon(SettingsOutline)
-    // }
-  ]
-
-  const handleUpdateValue = key => {
-    activeKey.value = key
-    router.push(key)
+const menuOptions = [
+  {
+    label: 'Dashboard',
+    key: 'dashboard',
+    icon: renderIcon(HomeOutline)
+  },
+  {
+    label: 'Danh mục',
+    key: 'countries',
+    icon: renderIcon(PeopleOutline)
+  },
+  {
+    label: 'Abbreviation',
+    key: 'Abbreviation',
+    icon: renderIcon(SettingsOutline)
+  },
+  {
+    label: 'Country',
+    key: 'Country',
+    icon: renderIcon(PeopleOutline)
   }
-  watchEffect(() => {})
+]
+
+const handleUpdateValue = (key) => {
+  activeKey.value = key
+  router.push({ name: key })
+}
 </script>

@@ -26,10 +26,9 @@
 <script setup>
 import { ref, onMounted } from "vue"
 import { NCard, NButton, useMessage, useDialog } from "naive-ui"
-import CountriesTable from "@/pages/Country/components/CountryTable.vue"
-import CountriesFormModal from "@/pages/Country/components/CountryFormModal.vue"
-import { CountriesService } from "@/api/country"
-
+import CountriesTable from "@/views/country/components/CountryTable.vue"
+import CountriesFormModal from "@/views/country/components/CountryFormModel.vue"
+import { CountryService } from "@/services/types/country.service"
 const message = useMessage()
 const dialog = useDialog()
 
@@ -43,7 +42,7 @@ onMounted(() => loadData())
 const loadData = async () => {
   loading.value = true
   try {
-    countries.value = await CountriesService.getAll()
+    countries.value = await CountryService.getAll()
   } catch (error) {
     console.error(error)
     message.error("Lỗi khi tải dữ liệu")

@@ -3,14 +3,15 @@ import type { Country } from "@/types/country.types.ts"
 import type { AxiosResponse } from "axios"
 
 export class CountryService {
-  private readonly baseUrl = '/country'
+  private readonly baseUrl = '/au-country'
 
-  async getAll(): Promise<Country[]> {
-    const response: AxiosResponse<{ data: Country[] }> = await apiService.get(this.baseUrl)
-    
-    return response.data.data  
-  }
+    async getCountry(params?: undefined): Promise<Country[]> {
+      const response = await apiService.get<Country[]>(this.baseUrl, {
+        params,
+      })
+  
+      return response
+    }
 }
 
-// Singleton
 export const countriesService = new CountryService()
