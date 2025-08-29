@@ -1,5 +1,5 @@
 <template>
-  <n-layout has-sider style="height: 100vh;">
+  <n-layout has-sider style="height: 100vh">
     <!-- Sidebar -->
     <n-layout-sider
       bordered
@@ -19,7 +19,12 @@
 
       <!-- Content -->
       <n-layout-content
-        style="padding: 20px; background: #f5f5f5; height: calc(100vh - 60px); overflow: auto;"
+        style="
+          padding: 20px;
+          background: #f5f5f5;
+          height: calc(100vh - 60px);
+          overflow: auto;
+        "
       >
         <!-- router-view để render các page -->
         <router-view />
@@ -29,10 +34,10 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { NLayout, NLayoutSider, NLayoutContent } from 'naive-ui'
-import Header from './Header.vue'
-import Sidebar from './Sidebar.vue'
+  import { ref } from 'vue'
+  import { NLayout, NLayoutSider, NLayoutContent } from 'naive-ui'
+  import Header from './Header.vue'
+  import Sidebar from './Sidebar.vue'
 
-const collapsed = ref(false)
+  const collapsed = ref(false)
 </script>

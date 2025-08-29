@@ -4,24 +4,24 @@ import MainLayout from '@/layouts/MainLayout.vue'
 import Home from '@/views/home/index.vue'
 import Abbreviation from '@/views/abbreviation/index.vue'
 import { AbbreviationRouters } from './routes/abbreviation'
-import Country from '@/views/country/index.vue'
-
-const routes = [
-  {
-    path: '/',
-    component: MainLayout,
-    children: [
-      {path: '', name: 'home', component: Home },
-      {path: 'Abbreviation', name: 'Abbreviation', component: Abbreviation},
-      {path: 'Country', name: 'Country', component: Country}
-    ]
-  },
-  ...AbbreviationRouters, 
-]
+import AdminLayout from '@/layouts/MainLayout.vue'
+import NotFound from '@/views/Error/404.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes
+  scrollBehavior: () => ({ top: 0 }),
+  routes: [
+    {
+      path: '/',
+      component: AdminLayout,
+      children: [
+        { path: '', redirect: '/home' },
+        { path: 'home', name: 'home', component: Home },
+        ...AbbreviationRouters
+      ]
+    },
+    { path: '/:pathMatch(.*)*', name: 'NotFound', component: NotFound } // fallback toàn cục
+  ]
 })
 
 export default router
