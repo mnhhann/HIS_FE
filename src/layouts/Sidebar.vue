@@ -51,12 +51,17 @@ const menuOptions = [
     label: 'Danh mục',
     key: 'countries',
     icon: renderIcon(PeopleOutline)
+  },
+  {
+    label: 'Abbreviation',
+    key: 'Abbreviation',
+    icon: renderIcon(SettingsOutline)
+  },
+  {
+    label: 'Country',
+    key: 'Country',
+    icon: renderIcon(PeopleOutline)
   }
-  // {
-  //   label: 'Settings',
-  //   key: 'settings',
-  //   icon: renderIcon(SettingsOutline)
-  // }
 ]
 
 const handleUpdateValue = (key) => {
