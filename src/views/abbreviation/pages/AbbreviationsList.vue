@@ -23,7 +23,7 @@
   // Local state
   const searchInput = ref('')
 
-  // Computed
+  // Computed test
   const hasAbbreviations = computed(() => {
     return abbreviations.value.length > 0
   })
