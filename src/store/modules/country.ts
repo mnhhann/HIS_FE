@@ -1,22 +1,25 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import type { Country } from '@/types/country.types.ts'
-import { countriesService } from '@/services/types/country.service' 
+import { countriesService } from '@/services/types/country.service'
 
 export const useCountryStore = defineStore('country', () => {
+  // state
   const countries = ref<Country[]>([])
   const loading = ref(false)
 
+  // actions
   const setCountries = (data: Country[]) => {
     countries.value = data
   }
 
-  const loadData = async () => {
+  const loadCountries = async () => {
     loading.value = true
     try {
-      countries.value = await countriesService.getCountry() 
+      const data = await countriesService.getAll()
+      countries.value = data
     } catch (error) {
-      console.error(error)
+      console.error('Lỗi khi tải danh sách quốc gia', error)
     } finally {
       loading.value = false
     }
@@ -37,5 +40,5 @@ export const useCountryStore = defineStore('country', () => {
     countries.value = countries.value.filter(c => c.id !== id)
   }
 
-  return { countries, loading, setCountries, loadData, addCountry, updateCountry, deleteCountry }
+  return { countries, loading, setCountries, loadCountries, addCountry, updateCountry, deleteCountry }
 })
