@@ -5,7 +5,7 @@ import type { AxiosResponse } from "axios"
 export class CountryService {
   private readonly baseUrl = '/au-country'
 
-    async getAbbreviations(params?: undefined): Promise<Country[]> {
+    async getCountry(params?: undefined): Promise<Country[]> {
       const response = await apiService.get<Country[]>(this.baseUrl, {
         params,
       })

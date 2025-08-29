@@ -14,7 +14,7 @@ export const useCountryStore = defineStore('country', () => {
   const loadData = async () => {
     loading.value = true
     try {
-      countries.value = await countriesService.getAll() 
+      countries.value = await countriesService.getCountry() 
     } catch (error) {
       console.error(error)
     } finally {
